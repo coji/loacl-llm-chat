@@ -3,7 +3,7 @@ import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@re
 import { createHead } from 'remix-island'
 import globalStyles from './styles/globals.css'
 
-export const meta: V2_MetaFunction = () => [{ title: 'Japanese LM Chat' }]
+export const meta: V2_MetaFunction = () => [{ title: 'Local LLM Chat' }]
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: globalStyles }]
 

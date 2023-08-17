@@ -5,7 +5,7 @@ export const AppHeader = () => {
   return (
     <header className="flex items-center bg-background px-2 py-1">
       <Heading>
-        <Link to="/">Japanese LM Chat</Link>
+        <Link to="/">Local LLM Chat</Link>
       </Heading>
     </header>
   )
