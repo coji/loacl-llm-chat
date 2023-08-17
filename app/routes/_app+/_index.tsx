@@ -5,7 +5,6 @@ import { json } from '@remix-run/node'
 import { Form, useLoaderData, useNavigation } from '@remix-run/react'
 import { SendHorizontalIcon } from 'lucide-react'
 import { useEffect } from 'react'
-import { setTimeout } from 'timers/promises'
 import { z } from 'zod'
 import { ChatHistory, ChatHistoryItem, ChatHistoryItemMessage } from '~/components'
 import { Button, HStack, Input, Stack } from '~/components/ui'
@@ -19,7 +18,6 @@ const chatSessions: string[] = []
 const chatHistories: { id: number; message: string; role: 'user' | 'assistant' }[] = []
 
 export const loader = async ({ request }: LoaderArgs) => {
-  await setTimeout(1000)
   return json({ chatSessions, chatHistories })
 }
 

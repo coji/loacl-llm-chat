@@ -6,7 +6,7 @@ import { cn } from '~/utils/cn'
 const ChatHistory = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => {
     return (
-      <div ref={ref} className={cn('relative flex-1 overflow-auto', className)} {...props}>
+      <div ref={ref} className={cn('relative flex-1 overflow-auto pr-8', className)} {...props}>
         <div className="absolute inset-0 flex flex-1 flex-col gap-1">{children}</div>
       </div>
     )
@@ -14,7 +14,7 @@ const ChatHistory = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
 )
 ChatHistory.displayName = 'ChatHistory'
 
-const chatHistoryItemVariants = cva('flex flex-col max-w-full overflow-x-auto', {
+const chatHistoryItemVariants = cva('flex flex-col break-all', {
   variants: {
     role: {
       system: 'mx-auto',
@@ -34,12 +34,12 @@ const ChatHistoryItem = React.forwardRef<
 ))
 ChatHistoryItem.displayName = 'ChatHistoryItemContainer'
 
-const chatHistoryItemMessageVariants = cva('px-2 py-1 bg-background text-foreground rounded', {
+const chatHistoryItemMessageVariants = cva('px-2 py-1 text-foreground rounded', {
   variants: {
     role: {
       system: 'mx-auto',
-      user: 'ml-auto',
-      assistant: 'mr-auto',
+      user: 'ml-auto bg-background ',
+      assistant: 'mr-auto bg-secondary',
     },
   },
   defaultVariants: {
