@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 import * as React from 'react'
+import nl2br from 'react-nl2br'
 import { cn } from '~/utils/cn'
 
 const ChatHistory = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
@@ -13,7 +14,7 @@ const ChatHistory = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
 )
 ChatHistory.displayName = 'ChatHistory'
 
-const chatHistoryItemVariants = cva('flex flex-col', {
+const chatHistoryItemVariants = cva('flex flex-col max-w-full overflow-x-auto', {
   variants: {
     role: {
       system: 'mx-auto',
@@ -48,8 +49,10 @@ const chatHistoryItemMessageVariants = cva('px-2 py-1 bg-background text-foregro
 const ChatHistoryItemMessage = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof chatHistoryItemMessageVariants>
->(({ className, role, ...props }, ref) => (
-  <div ref={ref} className={cn(chatHistoryItemMessageVariants({ role }), className)} {...props} />
+>(({ className, role, children, ...props }, ref) => (
+  <div ref={ref} className={cn(chatHistoryItemMessageVariants({ role }), className)} {...props}>
+    {nl2br(children)}
+  </div>
 ))
 ChatHistoryItemMessage.displayName = 'ChatHistoryItemMessage'
 

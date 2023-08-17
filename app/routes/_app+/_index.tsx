@@ -9,6 +9,7 @@ import { setTimeout } from 'timers/promises'
 import { z } from 'zod'
 import { ChatHistory, ChatHistoryItem, ChatHistoryItemMessage } from '~/components'
 import { Button, HStack, Input, Stack } from '~/components/ui'
+import { cmd } from '~/services/cmd.server'
 
 const schema = z.object({
   input: z.string().max(3000),
@@ -27,14 +28,22 @@ export const action = async ({ request }: ActionArgs) => {
   if (!submission.value) {
     return json(submission)
   }
+
+  const { input } = submission.value
   chatHistories.push({
     id: chatHistories.length,
-    message: submission.value.input,
+    message: input,
     role: 'user',
   })
+
+  const assistantMessage = await cmd(
+    './gpt-neox',
+    `-m models/line-corp-japanese-large-lm-3.6b-ggml-q4_0.bin -p ${input}`,
+    './llm',
+  )
   chatHistories.push({
     id: chatHistories.length,
-    message: 'Hello, World!',
+    message: assistantMessage,
     role: 'assistant',
   })
   return json(submission.value)
@@ -49,16 +58,17 @@ export default function IndexPage() {
     onValidate: ({ formData }) => parse(formData, { schema }),
   })
 
+  const isSending = navigation.state !== 'idle'
+
   useEffect(() => {
-    if (navigation.state === 'submitting' && form.ref.current) {
+    if (navigation.state === 'submitting') {
       // 送信時にフォームをリセットして、input に再フォーカス
-      form.ref.current.reset()
-      if (input.id) document.getElementById(input?.id)?.focus()
-    } else if (navigation.state === 'idle') {
-      // 最新のログにスクロール
-      const latest = document.getElementById('latest')
-      latest?.scrollIntoView(true)
+      form.ref.current?.reset()
+      document.getElementById(input.id!)?.focus()
     }
+    // 最新のログにスクロール
+    const latest = document.getElementById('latest')
+    latest?.scrollIntoView(true)
   }, [form.ref, navigation.state, input.id])
 
   return (
@@ -69,6 +79,20 @@ export default function IndexPage() {
             <ChatHistoryItemMessage role={item.role}>{item.message}</ChatHistoryItemMessage>
           </ChatHistoryItem>
         ))}
+        {isSending && (
+          <>
+            <ChatHistoryItem role="user">
+              <ChatHistoryItemMessage role="user">
+                {navigation.formData?.get('input')?.toString() ?? 'sending'}
+              </ChatHistoryItemMessage>
+            </ChatHistoryItem>
+            <ChatHistoryItem role="assistant">
+              <ChatHistoryItemMessage role="assistant" className="text-foreground/50">
+                Loading...
+              </ChatHistoryItemMessage>
+            </ChatHistoryItem>
+          </>
+        )}
         <div id="latest" />
       </ChatHistory>
 
@@ -77,7 +101,14 @@ export default function IndexPage() {
           <HStack>
             <Input placeholder="Input your message here." autoFocus {...conform.input(input)}></Input>
             <Button disabled={!!input.error || navigation.state !== 'idle'} variant="default">
-              <SendHorizontalIcon className="mr-2 h-4 w-4" /> {navigation.state !== 'idle' ? 'Send...' : 'Send'}
+              {isSending ? (
+                <>Sending...</>
+              ) : (
+                <>
+                  <SendHorizontalIcon className="mr-2 h-4 w-4" />
+                  Send
+                </>
+              )}
             </Button>
           </HStack>
         </Stack>
