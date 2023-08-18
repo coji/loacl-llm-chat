@@ -17,6 +17,9 @@ const schema = z.object({
 const chatSessions: string[] = []
 const chatHistories: { id: number; message: string; role: 'user' | 'assistant' }[] = []
 
+const MODEL = 'line-corp-japanese-large-lm-3.6b-instruction-sft-ggml-q8_0.bin'
+// line-corp-japanese-large-lm-3.6b-ggml-q4_0.bin
+
 export const loader = async ({ request }: LoaderArgs) => {
   return json({ chatSessions, chatHistories })
 }
@@ -34,11 +37,7 @@ export const action = async ({ request }: ActionArgs) => {
     role: 'user',
   })
 
-  const assistantMessage = await cmd(
-    './gpt-neox',
-    `-m models/line-corp-japanese-large-lm-3.6b-ggml-q4_0.bin -p ${input}`,
-    './llm',
-  )
+  const assistantMessage = await cmd('./gpt-neox', `-m models/${MODEL} --temp 0.5 -p ${input}`, './llm')
   chatHistories.push({
     id: chatHistories.length,
     message: assistantMessage,

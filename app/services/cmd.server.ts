@@ -48,7 +48,7 @@ export const cmd = (command: string, args: string, cwd?: string) => {
 
     childProcess.stdout.on('end', () => {
       // 改行文字に変換
-      resolve(result.replaceAll('<0x0A>', '\n'))
+      resolve(result.replaceAll('<0x0A>', '\n').replaceAll('</s>', ''))
     })
   })
   return promise
