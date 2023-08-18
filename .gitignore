@@ -33,4 +33,4 @@ yarn-error.log*
 /.cache
 /public/build
 data
-llm
+llm/models/*
