@@ -1,4 +1,6 @@
 import Downloader from 'nodejs-file-downloader'
+import { basename } from 'path'
+import type { LanguageModel } from '~/interfaces/model'
 
 export const createDownloadService = () => {
   let downloader: InstanceType<typeof Downloader> | null = null
@@ -6,19 +8,11 @@ export const createDownloadService = () => {
   let progress = ''
   let remainSize: number | null = null
 
-  const startDownload = async ({
-    url,
-    directory = './llm/models',
-    fileName,
-  }: {
-    url: string
-    directory?: string
-    fileName: string
-  }) => {
+  const startDownload = async (model: LanguageModel) => {
     downloader = new Downloader({
-      url,
-      directory,
-      fileName,
+      url: model.url,
+      directory: './llm/models',
+      fileName: basename(model.url),
       onProgress: (percentage, chunk, remainingSize) => {
         progress = percentage
         remainSize = remainingSize

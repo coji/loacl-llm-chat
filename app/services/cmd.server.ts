@@ -6,17 +6,14 @@ export const cmd = (command: string, args: string, cwd?: string) => {
     Body = 'body',
     End = 'end',
   }
-
   let result = ''
   let state = State.Initial
   let prevChar = ''
 
-  const promise = new Promise<string>((resolve) => {
-    console.log('cmd', command, args, cwd)
+  const promise = new Promise<string | null>((resolve, reject) => {
     const childProcess = spawn(command, args.split(' '), { cwd })
-
     childProcess.on('error', (err) => {
-      console.log('cmd error', err)
+      reject(err)
     })
     childProcess.stdout.on('data', (data) => {
       const str = data.toString()
@@ -28,7 +25,6 @@ export const cmd = (command: string, args: string, cwd?: string) => {
               state = State.Body
             }
             break
-
           case State.Body:
             if (c === '\n' && prevChar === '\n') {
               state = State.End
@@ -36,19 +32,15 @@ export const cmd = (command: string, args: string, cwd?: string) => {
               result += c
             }
             break
-
           case State.End:
             // do nothing
             break
         }
-
         prevChar = c
       }
     })
-
     childProcess.stdout.on('end', () => {
-      // 改行文字に変換
-      resolve(result.replaceAll('<0x0A>', '\n').replaceAll('</s>', ''))
+      resolve(result)
     })
   })
   return promise

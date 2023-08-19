@@ -2,9 +2,9 @@ import { useForm } from '@conform-to/react'
 import { parse } from '@conform-to/zod'
 import type { ActionArgs } from '@remix-run/node'
 import { Form } from '@remix-run/react'
-import { basename } from 'path'
 
 import { z } from 'zod'
+import MODELS from '~/assets/language-models.json'
 import {
   Button,
   Card,
@@ -22,33 +22,6 @@ import {
 } from '~/components/ui'
 import { createDownloadService } from '~/services/model-download.server'
 
-const MODELS = [
-  {
-    id: '1',
-    vendor: 'LINE Corp',
-    name: 'Japanese Large LM 3.6B GGML Q4',
-    description: 'line-corp-japanese-large-lm-3.6b-ggml-q4_0.bin',
-    url: 'https://huggingface.co/mmnga/line-corp-japanese-large-lm-3.6b-ggml/resolve/main/line-corp-japanese-large-lm-3.6b-ggml-q4_0.bin',
-    size: '2.09GB',
-  },
-  {
-    id: '2',
-    vendor: 'LINE Corp',
-    name: 'Japanese Large LM 3.6B GGML Q8',
-    description: 'line-corp-japanese-large-lm-3.6b-ggml-q8_0.bin',
-    url: 'https://huggingface.co/mmnga/line-corp-japanese-large-lm-3.6b-ggml/resolve/main/line-corp-japanese-large-lm-3.6b-ggml-q8_0.bin',
-    size: '3.95GB',
-  },
-  {
-    id: '3',
-    vendor: 'LINE Corp',
-    name: 'Japanese Large LM 3.6B Instruction SFT GGML Q8',
-    description: 'line-corp-japanese-large-lm-3.6b-instruction-sft-ggml-q8_0',
-    url: 'https://huggingface.co/mmnga/line-corp-japanese-large-lm-3.6b-instruction-sft-ggml/resolve/main/line-corp-japanese-large-lm-3.6b-instruction-sft-ggml-q8_0.bin',
-    size: '3.95GB',
-  },
-]
-
 const schema = z.object({
   modelId: z.string(),
 })
@@ -65,10 +38,7 @@ export const action = async ({ request }: ActionArgs) => {
   }
 
   const downloadService = createDownloadService()
-  downloadService.startDownload({
-    url: model.url,
-    fileName: basename(model.url),
-  })
+  downloadService.startDownload(model)
   return null
 }
 

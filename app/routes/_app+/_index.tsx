@@ -6,9 +6,10 @@ import { Form, useLoaderData, useNavigation } from '@remix-run/react'
 import { SendHorizontalIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { z } from 'zod'
+import MODELS from '~/assets/language-models.json'
 import { ChatHistory, ChatHistoryItem, ChatHistoryItemMessage } from '~/components'
 import { Button, HStack, Input, Stack } from '~/components/ui'
-import { cmd } from '~/services/cmd.server'
+import { llmCommand } from '~/services/llm.server'
 
 const schema = z.object({
   input: z.string().max(3000),
@@ -16,9 +17,6 @@ const schema = z.object({
 
 const chatSessions: string[] = []
 const chatHistories: { id: number; message: string; role: 'user' | 'assistant' }[] = []
-
-const MODEL = 'line-corp-japanese-large-lm-3.6b-instruction-sft-ggml-q8_0.bin'
-// line-corp-japanese-large-lm-3.6b-ggml-q4_0.bin
 
 export const loader = async ({ request }: LoaderArgs) => {
   return json({ chatSessions, chatHistories })
@@ -37,7 +35,8 @@ export const action = async ({ request }: ActionArgs) => {
     role: 'user',
   })
 
-  const assistantMessage = await cmd('./gpt-neox', `-m models/${MODEL} --temp 0.5 -p ${input}`, './llm')
+  const assistantMessage = await llmCommand({ model: MODELS[0], prompt: input })
+  console.log(assistantMessage)
   chatHistories.push({
     id: chatHistories.length,
     message: assistantMessage,
