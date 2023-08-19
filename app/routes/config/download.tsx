@@ -1,6 +1,6 @@
 import { useForm } from '@conform-to/react'
 import { parse } from '@conform-to/zod'
-import type { ActionArgs } from '@remix-run/node'
+import type { ActionArgs } from '@remix-run/deno'
 import { Form } from '@remix-run/react'
 
 import { z } from 'zod'

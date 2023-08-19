@@ -1,7 +1,6 @@
 import { conform, useForm } from '@conform-to/react'
 import { parse } from '@conform-to/zod'
-import type { ActionArgs, LoaderArgs } from '@remix-run/node'
-import { json } from '@remix-run/node'
+import { json, type ActionArgs, type LoaderArgs } from '@remix-run/deno'
 import { Form, useLoaderData, useNavigation } from '@remix-run/react'
 import { SendHorizontalIcon } from 'lucide-react'
 import { useEffect } from 'react'
