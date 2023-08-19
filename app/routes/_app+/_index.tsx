@@ -1,14 +1,13 @@
 import { conform, useForm } from '@conform-to/react'
 import { parse } from '@conform-to/zod'
-import type { ActionArgs, LoaderArgs } from '@remix-run/node'
-import { json } from '@remix-run/node'
-import { Form, useLoaderData, useNavigation } from '@remix-run/react'
+import { json, type ActionArgs, type LoaderArgs } from '@remix-run/node'
+import { Form, useLoaderData, useNavigation, useSubmit } from '@remix-run/react'
 import { SendHorizontalIcon } from 'lucide-react'
-import { useEffect } from 'react'
+import React from 'react'
 import { z } from 'zod'
 import MODELS from '~/assets/language-models.json'
 import { ChatHistory, ChatHistoryItem, ChatHistoryItemMessage } from '~/components'
-import { Button, HStack, Input, Stack } from '~/components/ui'
+import { Button, HStack, Stack, Textarea } from '~/components/ui'
 import { llmCommand } from '~/services/llm.server'
 
 const schema = z.object({
@@ -54,9 +53,10 @@ export default function IndexPage() {
     onValidate: ({ formData }) => parse(formData, { schema }),
   })
 
+  const submit = useSubmit()
   const isSending = navigation.state !== 'idle'
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (navigation.state === 'submitting') {
       // 送信時にフォームをリセットして、input に再フォーカス
       form.ref.current?.reset()
@@ -95,7 +95,18 @@ export default function IndexPage() {
       <Form method="POST" {...form.props} autoComplete="off" replace>
         <Stack>
           <HStack>
-            <Input placeholder="Input your message here." autoFocus {...conform.input(input)}></Input>
+            <Textarea
+              className="min-h-4"
+              placeholder="Input your message here."
+              autoFocus
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' && event.metaKey) {
+                  event.preventDefault()
+                  submit(form.ref.current)
+                }
+              }}
+              {...conform.textarea(input)}
+            ></Textarea>
             <Button disabled={!!input.error || navigation.state !== 'idle'} variant="default">
               {isSending ? (
                 <>Sending...</>

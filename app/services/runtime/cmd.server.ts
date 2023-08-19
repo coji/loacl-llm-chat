@@ -1,6 +1,7 @@
 import { spawn } from 'child_process'
 
 export const cmd = (command: string, args: string, cwd?: string) => {
+  console.log({ command, args, cwd })
   enum State {
     Initial = 'initial',
     Body = 'body',
@@ -17,6 +18,7 @@ export const cmd = (command: string, args: string, cwd?: string) => {
     })
     childProcess.stdout.on('data', (data) => {
       const str = data.toString()
+      console.log(str)
       for (let i = 0; i < str.length; i++) {
         const c = str.charAt(i)
         switch (state) {

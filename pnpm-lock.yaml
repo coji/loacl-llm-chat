@@ -92,9 +92,6 @@ dependencies:
   '@radix-ui/react-tooltip':
     specifier: 1.0.6
     version: 1.0.6(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
-  '@remix-run/express':
-    specifier: 1.19.3
-    version: 1.19.3(express@4.18.2)
   '@remix-run/node':
     specifier: 1.19.3
     version: 1.19.3
