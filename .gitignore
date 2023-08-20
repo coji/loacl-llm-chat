@@ -32,5 +32,8 @@ yarn-error.log*
 
 /.cache
 /public/build
+
+# application storages
 data
-llm/models/*
+prompts
+llm/models
