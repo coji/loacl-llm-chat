@@ -4,9 +4,7 @@ const { flatRoutes } = require('remix-flat-routes')
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
   ignoredRouteFiles: ['**/*'],
-  routes: (defineRoutes) => {
-    return flatRoutes('routes', defineRoutes)
-  },
+  routes: (defineRoutes) => flatRoutes('routes', defineRoutes),
   serverModuleFormat: 'cjs',
   serverDependenciesToBundle: 'all',
   watchPaths: ['tailwind.config.js'],
@@ -19,5 +17,5 @@ module.exports = {
     v2_dev: true,
   },
   tailwind: true,
-  postcss: true
+  postcss: true,
 }

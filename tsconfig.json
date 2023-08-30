@@ -2,7 +2,7 @@
   "include": ["**/*", "*", ".*"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "types": ["vitest/globals"],
+    "types": ["node", "react", "react-dom"],
     "isolatedModules": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
